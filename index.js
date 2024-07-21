@@ -11,14 +11,19 @@ async function getWeather() {
     let city = cityInput.value;
     city = city.replace(/ /g, "%20");
 
-    let time = Date.now();
-    let response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=us&key=${api}&contentType=json`);
-    time = Date.now() - time;
-    let data = await response.json();
-    console.log(time);
-    console.log(data.currentConditions.temp);
-    console.log(data.description);
-    responseTime.textContent = `Response time: ${time} ms`;
-    temperature.textContent = `Temperature: ${data.currentConditions.temp} Fahrenheit`;
-    description.textContent = data.description;
+    try {
+
+        let time = Date.now();
+        let response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=us&key=${api}&contentType=json`);
+        time = Date.now() - time;
+        let data = await response.json();
+        console.log(data);
+        responseTime.textContent = `Response time: ${time} ms`;
+        temperature.textContent = `Temperature: ${data.currentConditions.temp} Fahrenheit`;
+        description.textContent = data.description;
+    }
+    catch {
+        console.log("invalid location")
+        description.textContent = "Invalid location";
+    }
 }
