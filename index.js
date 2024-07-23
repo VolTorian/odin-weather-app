@@ -3,6 +3,7 @@ const api = "CRPB2EX2LBDSGYUZNHK3LM27N";
 const cityInput = document.getElementById("city-form");
 const form = document.querySelector("form");
 const responseTime = document.getElementById("response-time");
+const interpretedLocation = document.getElementById("location");
 const temperature = document.getElementById("temperature");
 const description = document.getElementById("description");
 form.onsubmit = getWeather;
@@ -19,6 +20,7 @@ async function getWeather() {
         let data = await response.json();
         console.log(data);
         responseTime.textContent = `Response time: ${time} ms`;
+        interpretedLocation.textContent = `Interpreted location: ${data.resolvedAddress}`
         temperature.textContent = `Temperature: ${data.currentConditions.temp} Fahrenheit`;
         description.textContent = data.description;
     }
