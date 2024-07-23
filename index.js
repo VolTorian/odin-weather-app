@@ -4,8 +4,8 @@ const cityInput = document.getElementById("city-form");
 const form = document.querySelector("form");
 const responseTime = document.getElementById("response-time");
 const interpretedLocation = document.getElementById("location");
-const temperature = document.getElementById("temperature");
-const description = document.getElementById("description");
+const today = document.getElementById("today");
+const days = document.getElementById("days");
 form.onsubmit = getWeather;
 
 async function getWeather() {
@@ -13,7 +13,6 @@ async function getWeather() {
     city = city.replace(/ /g, "%20");
 
     try {
-
         let time = Date.now();
         let response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=us&key=${api}&contentType=json`);
         time = Date.now() - time;
@@ -21,11 +20,29 @@ async function getWeather() {
         console.log(data);
         responseTime.textContent = `Response time: ${time} ms`;
         interpretedLocation.textContent = `Interpreted location: ${data.resolvedAddress}`
-        temperature.textContent = `Temperature: ${data.currentConditions.temp} Fahrenheit`;
-        description.textContent = data.description;
+
+        today.textContent = "";
+        days.textContent = "";
+        const todayTemperature = document.createElement("div");
+        todayTemperature.textContent = `Current temperature: ${data.currentConditions.temp}`
+        today.appendChild(todayTemperature);
+
+        buildDays(data);
     }
-    catch {
-        console.log("invalid location")
-        description.textContent = "Invalid location";
+    catch (e) {
+        console.log(e)
+    }
+}
+
+function buildDays(data) {
+    for (let i = 1; i < 7; i++) {
+        const day = document.createElement("div");
+        const date = document.createElement("div");
+        date.textContent = `Date: ${data.days[i].datetime}`
+        const dayTemperature = document.createElement("div");
+        dayTemperature.textContent = `Temperature range: ${data.days[i].tempmin} - ${data.days[i].tempmax}`
+
+        day.append(date, dayTemperature);
+        days.append(day);
     }
 }
